@@ -1,6 +1,7 @@
 package ru.geekbrains.LibraryJPA.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import ru.geekbrains.LibraryJPA.services.IssueService;
 import ru.geekbrains.LibraryJPA.services.ReaderService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -36,11 +39,24 @@ public class UIHtmlController {
     }
     @GetMapping("/readers/{id}")
     public String getBooksByReader (Model model, @PathVariable long id){
-        Reader reader = readerService.getReaderByID(id).get();
-        List<Book> books = issueService.getBooksByReader(id);
-        model.addAttribute("reader", reader);
-        model.addAttribute("books", books);
-        return "booksbyreader";
+        try {
+            Reader reader = readerService.getReaderByID(id).get();
+            /*
+            if (reader == null) {
+                String errorMessage = "Читатель с id = " + id + " не найден";
+
+                return "error";
+            }
+            */
+            List<Book> books = issueService.getBooksByReader(id);
+            model.addAttribute("reader", reader);
+            model.addAttribute("books", books);
+            return "booksbyreader";
+        }
+        catch (Exception ex){
+            model.addAttribute("errorMessage", "Читатель с id = " + id + " не найден");
+            return "error";
+        }
 
     }
     @GetMapping("/issues")
@@ -51,38 +67,5 @@ public class UIHtmlController {
         model.addAttribute("bookService", bookService);
         return "issues";
     }
-    /*
-
-
-    @GetMapping("/books")
-    public String getAllBooks(Model model) {
-        List<Book> books = bookRepository.getAllBooks();
-        model.addAttribute("books", books);
-        return "books";
-        }
-    @GetMapping("/readers")
-    public String getAllReaders (Model model){
-        List<Reader> readers = readerRepository.getAllReaders();
-        model.addAttribute("readers", readers);
-        return "readers";
-    }
-    @GetMapping("/issues")
-    public String getAllIssues(Model model){
-        List<Issue> issues = issueReposirory.getAllIssue();
-        model.addAttribute("issues", issues);
-        model.addAttribute("readerRepository", readerRepository);
-        model.addAttribute("bookRepository", bookRepository);
-        return "issues";
-    }
-    @GetMapping("/readers/{id}")
-    public String getBooksByReader (Model model, @PathVariable long id){
-        Reader reader = readerRepository.getReaderById(id);
-        List<Book> books = issueService.getBooksByReader(id);
-        model.addAttribute("reader", reader);
-        model.addAttribute("books", books);
-        return "booksbyreader";
-
-    }
-     */
 
 }

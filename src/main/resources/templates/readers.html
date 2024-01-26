@@ -16,7 +16,7 @@
     </tr>
     <tr th:each="reader: ${readers}">
         <td th:text="${reader.getId()}"></td>
-        <td th:text="${reader.getName()}"></td>
+        <td><a th:href="|/ui/readers/${reader.getId()}|" th:text="${reader.getName()}"></a></td>
     </tr>
 </table>
 </body>

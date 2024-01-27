@@ -41,13 +41,6 @@ public class UIHtmlController {
     public String getBooksByReader (Model model, @PathVariable long id){
         try {
             Reader reader = readerService.getReaderByID(id).get();
-            /*
-            if (reader == null) {
-                String errorMessage = "Читатель с id = " + id + " не найден";
-
-                return "error";
-            }
-            */
             List<Book> books = issueService.getBooksByReader(id);
             model.addAttribute("reader", reader);
             model.addAttribute("books", books);

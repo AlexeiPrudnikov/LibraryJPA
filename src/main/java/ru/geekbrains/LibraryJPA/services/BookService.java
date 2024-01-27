@@ -6,6 +6,7 @@ import ru.geekbrains.LibraryJPA.models.Book;
 import ru.geekbrains.LibraryJPA.repositories.BookRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,13 @@ public class BookService {
             return book;
         }
         return null;
+    }
+    public void deleteBook(long id){
+        try {
+            bookRepository.deleteById(id);
+        }
+        catch (Exception ex){
+            throw new NoSuchElementException("Не найден запрос книги с id = " + id);
+        }
     }
 }

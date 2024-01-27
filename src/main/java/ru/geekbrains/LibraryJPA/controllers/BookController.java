@@ -3,6 +3,8 @@ package ru.geekbrains.LibraryJPA.controllers;
 import jakarta.persistence.Table;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.LibraryJPA.models.Book;
 import ru.geekbrains.LibraryJPA.services.BookService;
@@ -35,4 +37,15 @@ public class BookController {
     public Book updateBook(@PathVariable long id, @PathParam("name") String name, @PathParam("author") String author) {
         return bookService.updateBook(id, name, author);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable long id){
+        try {
+            bookService.deleteBook(id);
+            return new ResponseEntity<>("Удаление книги с id = " + id + " произведено", HttpStatus.OK);
+        }
+        catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

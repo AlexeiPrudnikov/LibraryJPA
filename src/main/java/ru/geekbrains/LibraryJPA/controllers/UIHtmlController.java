@@ -25,35 +25,38 @@ public class UIHtmlController {
     private final BookService bookService;
     private final ReaderService readerService;
     private final IssueService issueService;
+
     @GetMapping("/books")
     public String getAllBooks(Model model) {
         List<Book> books = bookService.getAll();
         model.addAttribute("books", books);
         return "books";
     }
+
     @GetMapping("/readers")
-    public String getAllReaders(Model model){
+    public String getAllReaders(Model model) {
         List<Reader> readers = readerService.getAll();
         model.addAttribute("readers", readers);
         return "readers";
     }
+
     @GetMapping("/readers/{id}")
-    public String getBooksByReader (Model model, @PathVariable long id){
+    public String getBooksByReader(Model model, @PathVariable long id) {
+
         try {
             Reader reader = readerService.getReaderByID(id).get();
             List<Book> books = issueService.getBooksByReader(id);
             model.addAttribute("reader", reader);
             model.addAttribute("books", books);
             return "booksbyreader";
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             model.addAttribute("errorMessage", "Читатель с id = " + id + " не найден");
-            return "error";
+            return "libraryerror";
         }
-
     }
+
     @GetMapping("/issues")
-    public String getAllIssues(Model model){
+    public String getAllIssues(Model model) {
         List<Issue> issues = issueService.getAll();
         model.addAttribute("issues", issues);
         model.addAttribute("readerService", readerService);
